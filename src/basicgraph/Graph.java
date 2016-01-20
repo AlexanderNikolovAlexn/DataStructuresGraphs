@@ -1,6 +1,7 @@
 package basicgraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -121,8 +122,14 @@ public abstract class Graph {
 	 * @return The degree sequence of this graph.
 	 */
 	public List<Integer> degreeSequence() {
-		// XXX: Implement in part 1 of week 1
-		return null;
+		Integer[] arr = new Integer[numVertices];
+		for (int i = 0; i< numVertices; i++) {
+			List<Integer> neighbors = getNeighbors(i);
+			List<Integer> inNeighbors = getInNeighbors(i);
+			arr[i] = neighbors.size() + inNeighbors.size();
+		}
+		Arrays.sort(arr, Collections.reverseOrder());
+		return Arrays.asList(arr);
 	}
 	
 	/**
@@ -228,7 +235,7 @@ public abstract class Graph {
 
 	
 	public static void main (String[] args) {
-		GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		GraphLoader.createIntersectionsFile("data/maps/ucsd.map", "data/intersections/ucsd.intersections");
 		
 
 		// For testing of Part 1 functionality
