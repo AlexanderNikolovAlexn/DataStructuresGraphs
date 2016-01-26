@@ -8,9 +8,13 @@
 package roadgraph;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -138,10 +142,29 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
-		
+		Queue<MapNode> queue = new LinkedList<>();
+		Set<GeographicPoint> visited = new HashSet<>();
+		List<GeographicPoint> result = new ArrayList<>();
+		queue.add(this.nodes.get(start));
+		visited.add(start);
+		while(!queue.isEmpty()) {
+			MapNode curr = queue.poll();
+			if(curr.getLocation().equals(goal)) {
+				result.add(curr.getLocation());
+				return result;
+			}
+			for (MapEdge edge : curr.getEdges()) {
+				if(!visited.contains(edge.getEnd())) {
+					visited.add(edge.getEnd());
+					result.add(curr.getLocation());
+					System.out.println(curr.getLocation().toString());
+					queue.add(this.nodes.get(edge.getEnd()));
+				}
+			}
+		} 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-
+		
 		return null;
 	}
 	
