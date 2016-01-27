@@ -1,22 +1,23 @@
 package roadgraph;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import geography.GeographicPoint;
 
 public class MapNode {
 	
 	private GeographicPoint location;
-	private Set<MapEdge> edges;
+	private List<MapEdge> edges;
 	
-	public MapNode(GeographicPoint location, Set<MapEdge> edges) {
+	public MapNode(GeographicPoint location, List<MapEdge> edges) {
 		this.location = location;
 		this.edges = edges;
 	}
 
 	public MapNode(GeographicPoint location) {
-		this(location, new HashSet<>());
+		this(location, new LinkedList<>());
 	}
 
 	public GeographicPoint getLocation() {
@@ -27,11 +28,11 @@ public class MapNode {
 		this.location = location;
 	}
 
-	public Set<MapEdge> getEdges() {
+	public List<MapEdge> getEdges() {
 		return edges;
 	}
 
-	public void setEdges(Set<MapEdge> edges) {
+	public void setEdges(List<MapEdge> edges) {
 		this.edges = edges;
 	}
 	

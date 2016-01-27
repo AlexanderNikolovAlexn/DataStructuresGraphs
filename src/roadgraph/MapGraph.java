@@ -7,12 +7,11 @@
  */
 package roadgraph;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -141,31 +140,51 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, 
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
 		Queue<MapNode> queue = new LinkedList<>();
 		Set<GeographicPoint> visited = new HashSet<>();
-		List<GeographicPoint> result = new ArrayList<>();
+		List<GeographicPoint> result = new LinkedList<>();
+		Map<GeographicPoint, GeographicPoint> parentMap = new HashMap<>();
 		queue.add(this.nodes.get(start));
 		visited.add(start);
 		while(!queue.isEmpty()) {
 			MapNode curr = queue.poll();
 			if(curr.getLocation().equals(goal)) {
-				result.add(curr.getLocation());
+				result = reconstructPath(start, goal, parentMap);
 				return result;
 			}
-			for (MapEdge edge : curr.getEdges()) {
-				if(!visited.contains(edge.getEnd())) {
-					visited.add(edge.getEnd());
-					result.add(curr.getLocation());
-					System.out.println(curr.getLocation().toString());
-					queue.add(this.nodes.get(edge.getEnd()));
+			List<MapEdge> edges = curr.getEdges();			
+			ListIterator<MapEdge> it = edges.listIterator(edges.size());
+			while(it.hasPrevious()) {				
+				MapEdge next = it.previous();
+				GeographicPoint point = next.getEnd();
+				if(!visited.contains(point)) {
+					visited.add(point);
+					parentMap.put(point, curr.getLocation());
+					queue.add(this.nodes.get(point));
 				}
 			}
 		} 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 		
-		return null;
+		return result;
+	}
+	
+	private List<GeographicPoint> reconstructPath(GeographicPoint start, 
+			GeographicPoint goal, Map<GeographicPoint, GeographicPoint> parentMap) {
+		LinkedList<GeographicPoint> path = new LinkedList<>();
+		GeographicPoint curr = goal;
+		while(!curr.equals(start)) {
+			path.addFirst(curr);
+			curr = parentMap.get(curr);
+		}
+		path.addFirst(start);
+		
+		for (GeographicPoint geographicPoint : path) {
+			System.out.println(geographicPoint);
+		}
+		
+		return path;
 	}
 	
 
