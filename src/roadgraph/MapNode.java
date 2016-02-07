@@ -144,6 +144,20 @@ class MapNode implements Comparable
 		MapNode m = (MapNode)o; 
 		return ((Double)this.getDistance()).compareTo((Double) m.getDistance());
 	}
+	
+	public double getMinDistance() {
+		double minDis = 99999999;
+		for (MapEdge mapEdge : edges) {
+			GeographicPoint startPoint = mapEdge.getStartPoint();
+			GeographicPoint endPoint = mapEdge.getEndPoint();
+			//System.out.println("startpoint: " + startPoint + "endpoint: " + endPoint);
+			if(minDis > startPoint.distance(endPoint)) {
+				minDis = mapEdge.getLength();
+			}
+		}
+		
+		return minDis;
+	}
 
 	// END WEEK 3 SOLUTIONS
 }
