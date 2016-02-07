@@ -1,71 +1,116 @@
+/**
+ * 
+ */
 package roadgraph;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import geography.GeographicPoint;
 
-public class MapEdge {
-
-	private GeographicPoint end;
-	private String streetName;
+/**
+ * @author UCSD Intermediate Programming MOOC team
+ *
+ * A directed edge in a map graph from Node start to Node end
+ */
+class MapEdge 
+{
+	/** The name of the road */
+	private String roadName;
+	
+	/** The type of the road */
 	private String roadType;
-	private double distance;
 	
-	public MapEdge(GeographicPoint end, String streetName, String roadType, double distance) {
-		this.end = end;
-		this.streetName = streetName;
+	/** The two endpoints of the edge */
+	private MapNode start;
+	private MapNode end;
+	
+	
+	/** The length of the road segment, in km */
+	private double length;
+	
+	static final double DEFAULT_LENGTH = 0.01;
+	
+	
+	/** Create a new MapEdge object
+	 * 
+	 * @param roadName
+	 * @param n1  The point at one end of the segment
+	 * @param n2  The point at the other end of the segment
+	 * 
+	 */
+	MapEdge(String roadName, MapNode n1, MapNode n2) 
+	{
+		this(roadName, "", n1, n2, DEFAULT_LENGTH);
+	}
+	
+	MapEdge(String roadName, String roadType, MapNode n1, MapNode n2) 
+	{
+		this(roadName, roadType, n1, n2, DEFAULT_LENGTH);
+	}
+	
+	MapEdge(String roadName, String roadType,
+			MapNode n1, MapNode n2, double length) 
+	{
+		this.roadName = roadName;
+		start = n1;
+		end = n2;
 		this.roadType = roadType;
-		this.distance = distance;
+		this.length = length;
 	}
 	
-	public GeographicPoint getEnd() {
-		return end;
-	}
-	public void setEnd(GeographicPoint end) {
-		this.end = end;
-	}
-	public String getStreetName() {
-		return streetName;
-	}
-	public void setStreetName(String streetName) {
-		this.streetName = streetName;
-	}
-	public double getDistance() {
-		return distance;
-	}
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
-	public String getRoadType() {
-		return roadType;
-	}
-
-	public void setRoadType(String roadType) {
-		this.roadType = roadType;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((end == null) ? 0 : end.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MapEdge other = (MapEdge) obj;
-		if (end == null) {
-			if (other.end != null)
-				return false;
-		} else if (!end.equals(other.end))
-			return false;
-		return true;
+	// return the MapNode for the end point
+	MapNode getEndNode() {
+	   return end;
 	}
 	
+	// return the location of the start point
+	GeographicPoint getStartPoint()
+	{
+		return start.getLocation();
+	}
+	
+	// return the location of the end point
+	GeographicPoint getEndPoint()
+	{
+		return end.getLocation();
+	}
+	
+	// return the length
+	double getLength()
+	{
+		return length;
+	}
+	
+	
+	
+	// return road name
+	public String getRoadName()
+	{
+		return roadName;
+	}
+	
+	// given one node in an edge, return the other node
+	MapNode getOtherNode(MapNode node)
+	{
+		if (node.equals(start)) 
+			return end;
+		else if (node.equals(end))
+			return start;
+		throw new IllegalArgumentException("Looking for " +
+			"a point that is not in the edge");
+	}
+	
+	// return String containing details about the edge
+	public String toString()
+	{
+		String toReturn = "[EDGE between ";
+		toReturn += "\n\t" + start.getLocation();
+		toReturn += "\n\t" + end.getLocation();
+		toReturn += "\nRoad name: " + roadName + " Road type: " + roadType +
+				" Segment length: " + String.format("%.3g", length) + "km";
+		
+		return toReturn;
+	}
+
 }
